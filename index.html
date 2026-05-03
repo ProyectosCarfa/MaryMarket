@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AcneClear Shop — Limpieza & Cuidado de la Piel</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+            <img src="img/logo.png" alt="logo" width="120px">
+      </div>
+           MaryMarket
+    </a>
+    <div class="search-bar">
+      <input type="text" placeholder="Buscar productos..." id="searchInput" oninput="filterProducts()">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <button class="cart-btn" onclick="showToast('🛒 Pide por WhatsApp!')">
+      <i class="fa-solid fa-cart-arrow-down"></i> <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+  <div class="header-cats" id="categorias">
+    <span class="cat-chip active" onclick="filterCat('all',this)">🌟 Todo</span>
+    <span class="cat-chip" onclick="filterCat('limpieza',this)">🧼 Limpieza</span>
+    <span class="cat-chip" onclick="filterCat('champu',this)">🚿 Champú</span>
+    <span class="cat-chip" onclick="filterCat('tratamiento',this)">💊 Tratamiento</span>
+    <span class="cat-chip" onclick="filterCat('hidratante',this)">💧 Hidratante</span>
+    <span class="cat-chip" onclick="filterCat('exfoliante',this)">🌀 Exfoliante</span>
+  </div>
+</header>
+
+<div class="banner">
+  <div class="banner-text">
+    <h2>¡Adiós al Acné!<br>Piel Limpia ✨</h2>
+    <p>Dermatológicamente probado</p>
+    <span class="banner-badge">🔥 Hasta 60% OFF hoy</span>
+  </div>
+  <div class="banner-emoji">🧴</div>
+</div>
+
+<!-- ── FLASH SALE ─────────────────────────────────────────────────── -->
+<div class="flash-bar">
+  <div class="flash-title">⚡ Oferta Flash</div>
+  <div class="countdown">
+    <div class="count-block" id="cH">02</div>
+    <span class="count-sep">:</span>
+    <div class="count-block" id="cM">45</div>
+    <span class="count-sep">:</span>
+    <div class="count-block" id="cS">30</div>
+  </div>
+</div>
+
+<!-- ── SECCIÓN MÁS VENDIDOS ──────────────────────────────────────── -->
+<div class="section-title">🔥 Más Vendidos</div>
+
+<!-- ── GRID PRODUCTOS ─────────────────────────────────────────────── -->
+<div class="products-grid" id="productsGrid"></div>
+
+<!-- ── MODAL OVERLAY ─────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnBg(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-img-area">
+      <span class="modal-badge badge" id="mBadge"></span>
+      <div class="modal-emoji" id="mEmoji">🧴</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-brand" id="mBrand"></div>
+      <div class="modal-rating-row">
+        <span class="modal-stars" id="mStars"></span>
+        <span class="modal-reviews" id="mReviews"></span>
+      </div>
+      <div class="modal-price-row">
+        <span class="modal-price" id="mPrice"></span>
+        <span class="modal-old-price" id="mOldPrice"></span>
+        <span class="modal-discount-tag" id="mDiscount"></span>
+      </div>
+      <hr class="modal-divider">
+      <div class="modal-section-title">📋 Descripción</div>
+      <p class="modal-desc" id="mDesc"></p>
+      <div class="modal-section-title" style="margin-top:14px;">✅ Características</div>
+      <div class="modal-features" id="mFeatures"></div>
+      <hr class="modal-divider">
+      <div class="modal-section-title">📊 Especificaciones</div>
+      <table class="specs-table" id="mSpecs"></table>
+      <hr class="modal-divider">
+      <div class="modal-qty">
+        <span class="qty-label">Cantidad:</span>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-val" id="qtyVal">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-wa-large" id="btnWA" onclick="pedirWA()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Pedir por WhatsApp
+        </button>
+        <button class="btn-cart" onclick="addToCart()" title="Agregar al carrito">🛒</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAV ─────────────────────────────────────────────────── -->
+<nav class="sticky-bottom">
+  <div class="sticky-tab active">
+    <span class="tab-icon">🏠</span>Inicio
+  </div>
+  <div class="sticky-tab" onclick="showToast('🔍 Busca arriba!')">
+    <span class="tab-icon">🔍</span>Buscar
+  </div>
+  <div class="sticky-tab" onclick="showToast('❤️ Tus favoritos')">
+    <span class="tab-icon">❤️</span>Favoritos
+  </div>
+  <div class="sticky-tab" onclick="openWA('Hola! Quiero ver el catálogo completo de AcneClear 😊')">
+    <span class="tab-icon">💬</span>Chat
+  </div>
+</nav>
+
+<!-- ── TOAST ──────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+<script src="js/script.js"></script>
+</body>
+</html>
